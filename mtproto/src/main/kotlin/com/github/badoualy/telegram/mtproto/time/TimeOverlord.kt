@@ -15,7 +15,7 @@ internal object TimeOverlord {
     private val localTime: Long // ms
         get() = System.currentTimeMillis()
 
-    fun getServerTime(dataCenter: DataCenter) = localTime + deltaMap.getOrDefault(dataCenter, 0L)
+    fun getServerTime(dataCenter: DataCenter) = localTime +getOrDefault(deltaMap ,dataCenter)
 
     // Take time in seconds and shift left
     fun generateMessageId(dataCenter: DataCenter) = (getServerTime(dataCenter) / 1000) shl 32
@@ -30,4 +30,12 @@ internal object TimeOverlord {
     fun synchronizeTime(dataCenter: DataCenter, messageId: Long) {
         setServerTime(dataCenter, (messageId ushr 32) * 1000)
     }
+
+    fun getOrDefault(deltaMap : HashMap<DataCenter, Long> , dataCenter: DataCenter) : Long {
+        var res = deltaMap.get(dataCenter);
+        if ( res == null )
+            res = 0L
+        return  res;
+    }
+
 }
