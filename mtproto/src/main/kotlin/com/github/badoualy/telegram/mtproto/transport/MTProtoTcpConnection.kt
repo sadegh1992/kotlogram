@@ -6,7 +6,6 @@ import org.slf4j.MarkerFactory
 import java.io.IOException
 import java.net.ConnectException
 import java.net.InetSocketAddress
-import java.net.StandardSocketOptions
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.SelectionKey
@@ -38,7 +37,9 @@ internal class MTProtoTcpConnection
         var attempt = 1
         do {
             socketChannel = SocketChannel.open()
-            socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true)
+            socketChannel.socket().keepAlive = true
+            socketChannel.socket().tcpNoDelay = true
+//            socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true)
             //socketChannel.setOption(StandardSocketOptions.TCP_NODELAY, true)
             socketChannel.configureBlocking(true)
             try {
